@@ -44,10 +44,11 @@ export const auth = {
     });
 
     if (error) {
-      const code = error.code || '';
-      const msg  = error.message || '';
-      if (code === 'over_email_send_rate_limit' || msg.toLowerCase().includes('rate limit') || msg.toLowerCase().includes('after'))
-        return { error: 'Too many signup attempts. Please wait a few minutes before trying again.' };
+      const code   = error.code   || '';
+      const msg    = error.message || '';
+      const status = error.status  || 0;
+      if (status === 429 || code === 'over_email_send_rate_limit' || msg.toLowerCase().includes('rate limit') || msg.toLowerCase().includes('after'))
+        return { error: 'Too many signup attempts. Please wait 60 seconds before trying again.' };
       if (code === 'user_already_exists' || msg.toLowerCase().includes('already registered'))
         return { error: 'An account with this email already exists. Please sign in.' };
       if (code === 'weak_password' || msg.toLowerCase().includes('weak'))
@@ -72,15 +73,16 @@ export const auth = {
     });
 
     if (error) {
-      const code = error.code || '';
-      const msg  = error.message || '';
+      const code   = error.code   || '';
+      const msg    = error.message || '';
+      const status = error.status  || 0;
       if (code === 'invalid_credentials' || msg.includes('Invalid login') || msg.includes('invalid_grant') || msg.includes('Invalid email or password'))
         return { error: 'Invalid email or password.' };
       if (code === 'email_not_confirmed' || msg.includes('Email not confirmed') || msg.includes('email_not_confirmed'))
         return { error: 'Please verify your email first — check your inbox for the confirmation link.' };
       if (code === 'user_not_found' || msg.includes('User not found'))
         return { error: 'No account found with this email.' };
-      if (code === 'over_email_send_rate_limit' || msg.includes('rate limit'))
+      if (status === 429 || code === 'over_email_send_rate_limit' || msg.includes('rate limit'))
         return { error: 'Too many attempts. Please wait a minute and try again.' };
       return { error: msg || 'Login failed. Please try again.' };
     }
@@ -243,7 +245,7 @@ export function initRegisterForm() {
     });
 
     submitting = false;
-    setLoading(btn, false, 'Create Account');
+    setLoading(btn, false, 'Create Free Account');
 
     if (error) { showFormError(form, error); return; }
 
@@ -299,8 +301,17 @@ function setLoading(btn, loading, text) {
     : text;
 }
 
+/** Find the .form-error element for a form — checks inside the form first,
+ *  then falls back to the nearest .form-error sibling/cousin in the wrapper. */
+function findErrorEl(form) {
+  return form.querySelector('.form-error')
+    || form.closest('.auth-form-wrapper')?.querySelector('.form-error')
+    || form.parentElement?.querySelector('.form-error')
+    || null;
+}
+
 function showFormError(form, msg) {
-  const errorEl = form.querySelector('.form-error');
+  const errorEl = findErrorEl(form);
   if (errorEl) {
     errorEl.textContent = msg;
     errorEl.classList.add('visible');
@@ -308,7 +319,8 @@ function showFormError(form, msg) {
 }
 
 function clearFormErrors(form) {
-  form.querySelectorAll('.form-error').forEach(el => {
+  const wrapper = form.closest('.auth-form-wrapper') || form.parentElement;
+  wrapper?.querySelectorAll('.form-error').forEach(el => {
     el.textContent = '';
     el.classList.remove('visible');
   });
