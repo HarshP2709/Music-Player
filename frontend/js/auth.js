@@ -226,10 +226,29 @@ export function initRegisterForm() {
   if (!form) return;
 
   let submitting = false;
+  let rateLimitTimer = null;
+
+  /** Start a visible countdown on the submit button when rate-limited */
+  function startRateLimitCountdown(btn, seconds) {
+    let remaining = seconds;
+    btn.disabled = true;
+    const tick = () => {
+      btn.textContent = `Wait ${remaining}s before retrying…`;
+      if (remaining <= 0) {
+        clearInterval(rateLimitTimer);
+        rateLimitTimer = null;
+        btn.disabled = false;
+        btn.textContent = 'Create Free Account';
+      }
+      remaining--;
+    };
+    tick();
+    rateLimitTimer = setInterval(tick, 1000);
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (submitting) return;
+    if (submitting || rateLimitTimer) return;
 
     const btn = form.querySelector('[type="submit"]');
     submitting = true;
@@ -245,9 +264,21 @@ export function initRegisterForm() {
     });
 
     submitting = false;
-    setLoading(btn, false, 'Create Free Account');
 
-    if (error) { showFormError(form, error); return; }
+    if (error) {
+      // Rate-limited — show countdown so user knows when to retry
+      const isRateLimit = error.toLowerCase().includes('wait') || error.toLowerCase().includes('rate');
+      if (isRateLimit) {
+        showFormError(form, error);
+        startRateLimitCountdown(btn, 60);
+      } else {
+        setLoading(btn, false, 'Create Free Account');
+        showFormError(form, error);
+      }
+      return;
+    }
+
+    setLoading(btn, false, 'Create Free Account');
 
     if (needsVerification) {
       redirect(`login.html?registered=true`);
