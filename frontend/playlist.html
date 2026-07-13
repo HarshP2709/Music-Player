@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playlists — Harmony Music Player</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/music-player.css">
+  <link rel="stylesheet" href="css/playlist.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div id="loadingScreen">
+    <div class="loading-logo">♪ Harmony</div>
+    <div class="loading-bars">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <!-- SIDEBAR (same as dashboard) -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="sidebar__logo"><i class="fas fa-music"></i><span>Har<span>mony</span></span></div>
+      <nav class="sidebar__nav">
+        <span class="nav-section-title">Menu</span>
+        <a href="dashboard.html" class="nav-link"><i class="fas fa-home nav-icon"></i> Dashboard</a>
+        <a href="favorites.html" class="nav-link"><i class="fas fa-heart nav-icon"></i> Favorites</a>
+        <a href="playlist.html" class="nav-link active"><i class="fas fa-list nav-icon"></i> My Playlists</a>
+        <span class="nav-section-title">Library</span>
+        <div id="sidebarPlaylists" class="sidebar__playlists"></div>
+        <button class="nav-link" id="createPlaylistBtn"><i class="fas fa-plus nav-icon"></i> Create Playlist</button>
+      </nav>
+      <div class="sidebar__footer">
+        <div class="sidebar__user" onclick="window.location='profile.html'" role="button" tabindex="0">
+          <img id="sidebarAvatar" src="assets/images/default-avatar.jpg" class="sidebar__user-avatar" alt="Profile">
+          <div><div class="sidebar__user-name" id="sidebarName">—</div><div class="sidebar__user-plan">Free Plan</div></div>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar__left">
+          <button id="sidebarToggle" class="btn-icon" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
+        </div>
+        <div class="topbar__right">
+          <div class="search-container" role="search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="search" class="search-input" id="searchInput" placeholder="Search playlists..." aria-label="Search">
+            <div id="searchOverlay"><div id="searchResults"></div></div>
+          </div>
+          <button id="themeToggle" class="btn-icon"><i class="fas fa-sun"></i></button>
+          <a href="profile.html" class="btn-icon">
+            <img id="topbarAvatar" src="assets/images/default-avatar.jpg" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--border);" alt="Profile">
+          </a>
+        </div>
+      </header>
+
+      <!-- Single Playlist View (shown when ?id= param exists) -->
+      <div id="playlistDetailView" class="hidden">
+        <div class="playlist-hero" id="playlistHero"></div>
+        <div class="playlist-toolbar">
+          <div class="playlist-toolbar__left">
+            <button class="btn btn-secondary btn-sm" id="backToPlaylists">
+              <i class="fas fa-arrow-left"></i> Back
+            </button>
+          </div>
+          <div class="playlist-toolbar__right">
+            <select class="sort-select" id="sortSelect" aria-label="Sort songs">
+              <option value="default">Default Order</option>
+              <option value="title">Title A–Z</option>
+              <option value="artist">Artist A–Z</option>
+              <option value="duration">Duration</option>
+            </select>
+          </div>
+        </div>
+        <div class="playlist-songs" id="playlistSongsContainer"></div>
+      </div>
+
+      <!-- All Playlists View -->
+      <main id="allPlaylistsView" class="page-content">
+        <div class="page-header flex-between">
+          <div>
+            <h1 class="page-title">Your Playlists</h1>
+            <p class="page-subtitle">Create and manage your music collections</p>
+          </div>
+          <button class="btn btn-primary" id="createPlaylistBtn2">
+            <i class="fas fa-plus"></i> New Playlist
+          </button>
+        </div>
+        <div class="playlist-grid" id="playlistGrid">
+          <!-- Skeleton placeholders -->
+        </div>
+      </main>
+    </div>
+
+    <!-- BOTTOM PLAYER -->
+    <div id="bottomPlayer" role="region" aria-label="Music Player">
+      <div class="player-left">
+        <div class="player-cover-wrap">
+          <img id="playerCover" src="assets/images/default-cover.jpg" class="player-cover" alt="">
+        </div>
+        <div class="player-info">
+          <div class="player-title" id="playerSongTitle">No song playing</div>
+          <div class="player-artist" id="playerArtist">—</div>
+        </div>
+        <div class="player-left-actions">
+          <button class="btn-heart" id="btnHeart" aria-label="Favorite"><i class="far fa-heart"></i></button>
+        </div>
+      </div>
+      <div class="player-center">
+        <div class="player-controls">
+          <button class="player-btn" id="btnShuffle" title="Shuffle"><i class="fas fa-random"></i></button>
+          <button class="player-btn" id="btnPrev" title="Previous"><i class="fas fa-step-backward"></i></button>
+          <button class="player-btn player-btn--play" id="btnPlayPause" title="Play/Pause"><i class="fas fa-play"></i></button>
+          <button class="player-btn" id="btnNext" title="Next"><i class="fas fa-step-forward"></i></button>
+          <button class="player-btn" id="btnRepeat" title="Repeat"><i class="fas fa-redo"></i></button>
+        </div>
+        <div class="player-progress">
+          <span class="player-time" id="currentTime">0:00</span>
+          <input type="range" class="seek-bar" id="seekBar" min="0" max="100" value="0" aria-label="Progress">
+          <span class="player-time" id="totalTime">0:00</span>
+        </div>
+      </div>
+      <div class="player-right">
+        <div class="volume-container">
+          <button class="player-btn" id="btnMute"><i class="fas fa-volume-up"></i></button>
+          <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100" aria-label="Volume">
+        </div>
+        <button class="player-btn" id="btnQueue"><i class="fas fa-list-ul"></i></button>
+      </div>
+    </div>
+
+    <aside id="queuePanel" aria-label="Queue">
+      <div class="queue-header"><h3>Queue</h3>
+        <button class="btn-icon" onclick="document.getElementById('queuePanel').classList.remove('open')"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="queueList"></div>
+    </aside>
+  </div>
+
+  <!-- Create Playlist Modal -->
+  <div class="modal" id="createPlaylistModal" role="dialog" aria-modal="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__panel">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalCreateTitle">Create Playlist</h2>
+        <button class="modal__close" data-modal-close="createPlaylistModal"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="createPlaylistForm">
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" id="playlistName" class="form-input" placeholder="Playlist name" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea id="playlistDesc" class="form-input" rows="2" placeholder="Optional description" style="resize:vertical;"></textarea>
+        </div>
+        <div class="form-group flex-between">
+          <label class="form-label" for="playlistPublic">Make Public</label>
+          <label class="toggle-switch"><input type="checkbox" id="playlistPublic"><span class="toggle-track"></span></label>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button type="button" class="btn btn-secondary" data-modal-close="createPlaylistModal">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;"><i class="fas fa-plus"></i> Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Playlist Modal -->
+  <div class="modal" id="editPlaylistModal" role="dialog" aria-modal="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__panel">
+      <div class="modal__header">
+        <h2 class="modal__title">Edit Playlist</h2>
+        <button class="modal__close" data-modal-close="editPlaylistModal"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="editPlaylistForm">
+        <input type="hidden" id="editPlaylistId">
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" id="editPlaylistName" class="form-input" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea id="editPlaylistDesc" class="form-input" rows="2" style="resize:vertical;"></textarea>
+        </div>
+        <div class="form-group flex-between">
+          <label class="form-label">Public</label>
+          <label class="toggle-switch"><input type="checkbox" id="editPlaylistPublic"><span class="toggle-track"></span></label>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button type="button" class="btn btn-secondary" data-modal-close="editPlaylistModal">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import supabase from './js/supabase.js';
+    import { auth } from './js/auth.js';
+    import { initPlayer, setQueue } from './js/player.js';
+    import { initBottomPlayer, renderSkeletons, renderSongCards, initSidebar, initThemeToggle, initModals, openModal, closeModal } from './js/ui.js';
+    import { getUserPlaylists, getPlaylist, createPlaylist, updatePlaylist, deletePlaylist, renderPlaylistGrid, removeSongFromPlaylist, initDragDrop } from './js/playlist.js';
+    import { loadFavoriteIds } from './js/favorites.js';
+    import { initSearch } from './js/search.js';
+    import { sanitizeHTML, formatTime, formatDuration } from './js/utils.js';
+    import notify from './js/notifications.js';
+    import { applyTheme } from './js/profile.js';
+
+    // Remove loading screen immediately
+    const _ls = document.getElementById('loadingScreen');
+    if (_ls) { _ls.classList.add('fade-out'); setTimeout(() => _ls.remove(), 400); }
+
+    applyTheme();
+    await auth.requireAuth();
+
+    initPlayer();
+    initBottomPlayer();
+    initSidebar();
+    initThemeToggle();
+    initModals();
+    await loadFavoriteIds();
+
+    const playlistId = new URLSearchParams(location.search).get('id');
+    let allPlaylists = [];
+
+    // ── Load profile ──────────────────────────────────────────────
+    const profile = await auth.getProfile();
+    if (profile) {
+      document.getElementById('sidebarName').textContent = profile.full_name || profile.username;
+      if (profile.avatar_url) {
+        document.getElementById('sidebarAvatar').src = profile.avatar_url;
+        document.getElementById('topbarAvatar').src = profile.avatar_url;
+      }
+    }
+
+    // ── Load Playlists ────────────────────────────────────────────
+    async function loadAllPlaylists() {
+      allPlaylists = await getUserPlaylists();
+      const grid = document.getElementById('playlistGrid');
+      renderSkeletons(grid, 6, 'playlist');
+      setTimeout(() => {
+        renderPlaylistGrid(grid, allPlaylists, (pl) => {
+          const songs = pl.playlist_songs?.map(ps => ps.songs).filter(Boolean) || [];
+          if (songs.length) setQueue(songs, 0);
+        });
+        attachPlaylistCardActions();
+      }, 300);
+
+      // Sidebar
+      document.getElementById('sidebarPlaylists').innerHTML =
+        allPlaylists.slice(0, 6).map(pl => `
+          <div class="sidebar-playlist-item" onclick="window.location='playlist.html?id=${pl.id}'">
+            <img src="${pl.cover_url || 'https://picsum.photos/seed/'+pl.id+'/60/60'}" alt="${pl.name}">
+            <span>${pl.name}</span>
+          </div>
+        `).join('');
+    }
+
+    function attachPlaylistCardActions() {
+      document.querySelectorAll('[data-action="edit"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const pl = allPlaylists.find(p => p.id === btn.dataset.id);
+          if (!pl) return;
+          document.getElementById('editPlaylistId').value = pl.id;
+          document.getElementById('editPlaylistName').value = pl.name;
+          document.getElementById('editPlaylistDesc').value = pl.description || '';
+          document.getElementById('editPlaylistPublic').checked = pl.is_public;
+          openModal('editPlaylistModal');
+        });
+      });
+
+      document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (!confirm('Delete this playlist? This cannot be undone.')) return;
+          await deletePlaylist(btn.dataset.id);
+          loadAllPlaylists();
+        });
+      });
+
+      document.querySelectorAll('.playlist-card[data-id]').forEach(card => {
+        card.addEventListener('click', () => {
+          history.pushState(null, '', `?id=${card.dataset.id}`);
+          loadSinglePlaylist(card.dataset.id);
+        });
+      });
+    }
+
+    // ── Single Playlist View ──────────────────────────────────────
+    async function loadSinglePlaylist(id) {
+      document.getElementById('allPlaylistsView').classList.add('hidden');
+      document.getElementById('playlistDetailView').classList.remove('hidden');
+
+      const pl = await getPlaylist(id);
+      if (!pl) { notify.error('Not Found', 'Playlist not found.'); return; }
+
+      const songs = pl.playlist_songs?.map(ps => ps.songs).filter(Boolean) || [];
+
+      document.getElementById('playlistHero').innerHTML = `
+        <img class="playlist-hero__cover" src="${pl.cover_url || 'https://picsum.photos/seed/'+pl.id+'/300/300'}" alt="${sanitizeHTML(pl.name)}">
+        <div class="playlist-hero__info">
+          <div class="playlist-hero__type">Playlist</div>
+          <h1 class="playlist-hero__title">${sanitizeHTML(pl.name)}</h1>
+          ${pl.description ? `<p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:8px;">${sanitizeHTML(pl.description)}</p>` : ''}
+          <div class="playlist-hero__meta">
+            <span>${pl.profiles?.username || 'You'}</span>
+            <span>·</span>
+            <span>${songs.length} songs</span>
+            <span>·</span>
+            <span>${formatDuration(pl.total_duration)}</span>
+          </div>
+          <div class="playlist-hero__actions">
+            <button class="btn-play-big" id="heroPlayBtn" aria-label="Play playlist">
+              <i class="fas fa-play"></i>
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="openModal('editPlaylistModal');document.getElementById('editPlaylistId').value='${pl.id}';document.getElementById('editPlaylistName').value='${sanitizeHTML(pl.name)}';">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('heroPlayBtn')?.addEventListener('click', () => {
+        if (songs.length) setQueue(songs, 0);
+      });
+
+      // Render song list with drag-and-drop
+      const container = document.getElementById('playlistSongsContainer');
+      if (songs.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-music"></i><h3>No songs yet</h3><p>Add songs from your library.</p></div>';
+      } else {
+        container.innerHTML = `
+          <div class="song-list">
+            <div class="song-list__header">
+              <span class="col-num">#</span>
+              <span class="col-title">Title</span>
+              <span class="col-album">Album</span>
+              <span class="col-added">Duration</span>
+              <span class="col-duration"><i class="fas fa-clock"></i></span>
+            </div>
+            ${songs.map((song, idx) => `
+              <div class="song-row" data-song-id="${song.id}" draggable="true" role="row" tabindex="0">
+                <span class="col-num">
+                  <span class="song-num">${idx + 1}</span>
+                  <button class="btn-play-song" data-idx="${idx}"><i class="fas fa-play"></i></button>
+                </span>
+                <div class="col-title">
+                  <span class="drag-handle"><i class="fas fa-grip-vertical"></i></span>
+                  <img class="song-thumb" src="${song.cover_url || 'assets/images/default-cover.jpg'}" alt="" loading="lazy">
+                  <div>
+                    <div class="song-title">${sanitizeHTML(song.title)}</div>
+                    <div class="song-artist">${sanitizeHTML(song.artists?.name || '—')}</div>
+                  </div>
+                </div>
+                <div class="col-album">${sanitizeHTML(song.albums?.title || '—')}</div>
+                <div class="col-added">${formatTime(song.duration)}</div>
+                <div class="col-duration">
+                  <button class="btn-icon btn-danger" data-action="remove" data-song-id="${song.id}" data-playlist-id="${pl.id}" title="Remove">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        container.querySelectorAll('.btn-play-song').forEach(btn => {
+          btn.addEventListener('click', () => setQueue(songs, parseInt(btn.dataset.idx)));
+        });
+        container.querySelectorAll('.song-row').forEach((row, idx) => {
+          row.addEventListener('dblclick', () => setQueue(songs, idx));
+        });
+        container.querySelectorAll('[data-action="remove"]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if (!confirm('Remove this song?')) return;
+            await removeSongFromPlaylist(btn.dataset.playlistId, btn.dataset.songId);
+            loadSinglePlaylist(id);
+          });
+        });
+
+        initDragDrop('playlistSongsContainer', pl.id);
+      }
+    }
+
+    // ── Back button ───────────────────────────────────────────────
+    document.getElementById('backToPlaylists')?.addEventListener('click', () => {
+      history.pushState(null, '', 'playlist.html');
+      document.getElementById('allPlaylistsView').classList.remove('hidden');
+      document.getElementById('playlistDetailView').classList.add('hidden');
+    });
+
+    // ── Create playlist form ──────────────────────────────────────
+    const openCreate = () => openModal('createPlaylistModal');
+    document.getElementById('createPlaylistBtn')?.addEventListener('click', openCreate);
+    document.getElementById('createPlaylistBtn2')?.addEventListener('click', openCreate);
+
+    document.getElementById('createPlaylistForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { error } = await createPlaylist({
+        name: document.getElementById('playlistName').value,
+        description: document.getElementById('playlistDesc').value,
+        is_public: document.getElementById('playlistPublic').checked,
+      });
+      if (!error) { closeModal('createPlaylistModal'); e.target.reset(); loadAllPlaylists(); }
+    });
+
+    document.getElementById('editPlaylistForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editPlaylistId').value;
+      await updatePlaylist(id, {
+        name: document.getElementById('editPlaylistName').value,
+        description: document.getElementById('editPlaylistDesc').value,
+        is_public: document.getElementById('editPlaylistPublic').checked,
+      });
+      closeModal('editPlaylistModal');
+      loadAllPlaylists();
+    });
+
+    // ── Sort songs ────────────────────────────────────────────────
+    document.getElementById('sortSelect')?.addEventListener('change', (e) => {
+      const id = new URLSearchParams(location.search).get('id');
+      if (id) loadSinglePlaylist(id);
+    });
+
+    initSearch();
+
+    // ── Route on load ─────────────────────────────────────────────
+    if (playlistId) {
+      loadSinglePlaylist(playlistId);
+    } else {
+      loadAllPlaylists();
+    }
+  </script>
+</body>
+</html>

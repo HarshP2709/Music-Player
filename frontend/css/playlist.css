@@ -1,0 +1,267 @@
+/**
+ * Harmony Music Player - Playlist & Song List CSS
+ */
+
+/* ─── Playlist Page Layout ───────────────────────────────────────────────────── */
+.playlist-hero {
+  background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
+  padding: 48px 32px 32px;
+  display: flex;
+  align-items: flex-end;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.playlist-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(124,92,216,0.1) 0%, transparent 60%);
+}
+
+.playlist-hero__cover {
+  width: 200px;
+  height: 200px;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  box-shadow: var(--shadow-xl);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.playlist-hero__info {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+}
+.playlist-hero__type {
+  font-size: var(--font-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.playlist-hero__title {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.playlist-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+.playlist-hero__meta span { opacity: 0.5; }
+.playlist-hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Big play button */
+.btn-play-big {
+  width: 58px; height: 58px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(124,92,216,0.5);
+  transition: all var(--transition-fast);
+}
+.btn-play-big:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(124,92,216,0.6); }
+
+/* ─── Playlist Song Table ─────────────────────────────────────────────────────── */
+.playlist-songs {
+  padding: 0 24px;
+}
+
+/* ─── Playlist Cards Grid ─────────────────────────────────────────────────────── */
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--space-lg);
+}
+
+.playlist-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+.playlist-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-lg);
+}
+
+.playlist-card__cover {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+.playlist-card__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.playlist-card:hover .playlist-card__cover img { transform: scale(1.06); }
+
+.playlist-card__play {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 44px; height: 44px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 16px rgba(124,92,216,0.5);
+}
+.playlist-card:hover .playlist-card__play {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.playlist-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(124,92,216,0.8);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.06em;
+}
+
+.playlist-card__info {
+  padding: 14px;
+}
+.playlist-card__name {
+  font-weight: 600;
+  font-size: var(--font-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+.playlist-card__meta {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.playlist-card__actions {
+  display: flex;
+  gap: 4px;
+  padding: 0 10px 12px;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+.playlist-card:hover .playlist-card__actions { opacity: 1; }
+
+/* ─── Create Playlist Form ────────────────────────────────────────────────────── */
+.create-playlist-form .cover-upload {
+  width: 160px;
+  height: 160px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 10px;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  background: var(--bg-elevated);
+  margin: 0 auto 24px;
+  overflow: hidden;
+  position: relative;
+}
+.create-playlist-form .cover-upload:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+.create-playlist-form .cover-upload img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+.create-playlist-form .cover-upload.has-image img { display: block; }
+.create-playlist-form .cover-upload.has-image .upload-hint { display: none; }
+
+/* ─── Drag and Drop Song List ─────────────────────────────────────────────────── */
+[draggable="true"] {
+  cursor: grab;
+}
+[draggable="true"]:active { cursor: grabbing; }
+.dragging {
+  opacity: 0.5;
+  background: var(--accent-light) !important;
+  box-shadow: var(--shadow-md);
+}
+.drag-handle {
+  color: var(--text-muted);
+  cursor: grab;
+  padding: 0 8px;
+  font-size: 0.8rem;
+}
+
+/* ─── Playlist Sort/Filter Bar ────────────────────────────────────────────────── */
+.playlist-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+.playlist-toolbar__left { display: flex; align-items: center; gap: 12px; }
+.playlist-toolbar__right { display: flex; align-items: center; gap: 8px; }
+
+.sort-select {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--font-sm);
+  padding: 7px 12px;
+  cursor: pointer;
+  outline: none;
+  font-family: var(--font-family);
+  transition: all var(--transition-fast);
+}
+.sort-select:focus { border-color: var(--accent); }

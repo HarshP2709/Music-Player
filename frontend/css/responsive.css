@@ -1,0 +1,164 @@
+/**
+ * Harmony Music Player - Responsive CSS
+ * Media queries for mobile, tablet, desktop
+ */
+
+/* ─── Tablet (1024px and below) ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 220px;
+  }
+
+  .auth-page { grid-template-columns: 1fr; }
+  .auth-hero { display: none; }
+  .auth-panel { padding: 40px 24px; }
+
+  .profile-layout { grid-template-columns: 260px 1fr; gap: 24px; }
+
+  .song-list__header,
+  .song-row {
+    grid-template-columns: 40px 1fr 140px 70px;
+  }
+  .col-album { display: none; }
+}
+
+/* ─── Small Tablet & Large Mobile (768px and below) ──────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --player-height: 80px;
+  }
+
+  /* Sidebar becomes a drawer */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    z-index: 200;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-xl);
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  /* App layout becomes single column */
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #sidebarToggle { display: flex; }
+
+  .topbar { padding: 12px 16px; }
+  .topbar .search-container { max-width: 260px; }
+
+  .page-content { padding: 20px 16px; }
+
+  /* Player layout */
+  #bottomPlayer {
+    grid-template-columns: 1fr auto;
+    padding: 0 16px;
+    height: var(--player-height);
+  }
+  .player-center { display: none; }
+  .player-right .volume-container { display: none; }
+
+  .welcome-card { padding: 24px 20px; }
+  .welcome-card__greeting { font-size: 1.6rem; }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .quick-actions { grid-template-columns: repeat(2, 1fr); }
+
+  /* Grid */
+  .grid-songs { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .playlist-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+
+  .playlist-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 32px 20px 24px;
+  }
+  .playlist-hero__cover { width: 160px; height: 160px; }
+  .playlist-hero__actions { justify-content: center; }
+  .playlist-hero__meta { justify-content: center; }
+
+  /* Song list */
+  .song-list__header,
+  .song-row {
+    grid-template-columns: 40px 1fr 70px;
+    padding: 8px 12px;
+  }
+  .col-album, .col-added { display: none; }
+
+  /* Profile */
+  .profile-layout { grid-template-columns: 1fr; }
+  .profile-card { position: static; }
+
+  /* Queue panel */
+  #queuePanel { width: 100%; }
+
+  /* Auth */
+  .auth-panel { padding: 32px 20px; }
+  .auth-form-wrapper { max-width: 100%; }
+
+  #harmony-notifications {
+    left: 16px;
+    right: 16px;
+    max-width: 100%;
+  }
+}
+
+/* ─── Mobile (480px and below) ────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .welcome-card__actions { flex-direction: column; }
+  .welcome-card__actions .btn { width: 100%; justify-content: center; }
+
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .quick-actions { grid-template-columns: 1fr 1fr; }
+
+  .grid-songs { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+  .page-title { font-size: 1.5rem; }
+
+  .modal__panel { border-radius: var(--radius-lg); }
+
+  .player-left .player-info .player-title { font-size: 0.8rem; }
+
+  /* Bottom tabs for mobile */
+  #bottomPlayer {
+    height: 72px;
+    padding: 0 12px;
+  }
+  .player-cover { width: 44px; height: 44px; }
+
+  .auth-hero { display: none; }
+  .auth-page { grid-template-columns: 1fr; }
+}
+
+/* ─── Landscape Mobile ────────────────────────────────────────────────────────── */
+@media (max-height: 500px) and (orientation: landscape) {
+  #bottomPlayer { height: 60px; }
+  :root { --player-height: 60px; }
+  .player-cover { width: 40px; height: 40px; }
+}
+
+/* ─── Desktop Large (1400px+) ────────────────────────────────────────────────── */
+@media (min-width: 1400px) {
+  :root {
+    --sidebar-width: 280px;
+  }
+  .page-content { padding: 40px 48px; }
+  .topbar { padding: 18px 48px; }
+}
+
+/* ─── Print styles ────────────────────────────────────────────────────────────── */
+@media print {
+  #bottomPlayer, .sidebar, .topbar, #queuePanel { display: none; }
+  .main-content { padding-bottom: 0; }
+}
+
+/* ─── Reduced Motion ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

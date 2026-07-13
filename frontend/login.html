@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Harmony Music Player</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body class="auth-page">
+
+  <!-- Loading Screen -->
+  <div id="loadingScreen">
+    <div class="loading-logo">♪ Harmony</div>
+    <div class="loading-bars">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Hero Panel (left) -->
+  <aside class="auth-hero" aria-hidden="true">
+    <div class="auth-hero__orb auth-hero__orb--1"></div>
+    <div class="auth-hero__orb auth-hero__orb--2"></div>
+    <div class="auth-hero__orb auth-hero__orb--3"></div>
+
+    <div class="auth-hero__content">
+      <div class="auth-hero__logo">Har<span>mony</span></div>
+      <p class="auth-hero__tagline">Your soundtrack to life</p>
+
+      <div class="auth-vinyl" id="vinylRecord"></div>
+
+      <div class="auth-hero__features" role="list">
+        <div class="auth-feature" role="listitem">
+          <i class="fas fa-music"></i>
+          <span>50M+ songs from every genre</span>
+        </div>
+        <div class="auth-feature" role="listitem">
+          <i class="fas fa-list"></i>
+          <span>Create unlimited playlists</span>
+        </div>
+        <div class="auth-feature" role="listitem">
+          <i class="fas fa-heart"></i>
+          <span>Save your favorite songs</span>
+        </div>
+        <div class="auth-feature" role="listitem">
+          <i class="fas fa-signal"></i>
+          <span>High-quality audio streaming</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Auth Form Panel (right) -->
+  <main class="auth-panel">
+    <div class="auth-form-wrapper">
+      <a href="index.html" class="logo-link" aria-label="Harmony home">
+        <i class="fas fa-music"></i> Harmony
+      </a>
+
+      <h1 class="auth-heading">Welcome back</h1>
+      <p class="auth-subheading">Sign in to continue your music journey.</p>
+
+      <!-- Success notification banner (shown after registration) -->
+      <div id="regBanner" class="hidden" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;padding:12px 16px;border-radius:12px;font-size:0.875rem;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+        <i class="fas fa-check-circle"></i>
+        <span>Account created! Check your email to verify, then sign in.</span>
+      </div>
+
+      <!-- Error Display -->
+      <div class="form-error" id="loginError" role="alert" aria-live="polite"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <div class="form-input-icon">
+            <i class="fas fa-envelope input-icon" aria-hidden="true"></i>
+            <input
+              type="email"
+              id="email"
+              class="form-input"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+              aria-required="true"
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="form-input-icon">
+            <i class="fas fa-lock input-icon" aria-hidden="true"></i>
+            <input
+              type="password"
+              id="password"
+              class="form-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+              aria-required="true"
+            >
+            <button type="button" class="input-icon-right" id="togglePassword" aria-label="Toggle password visibility">
+              <i class="fas fa-eye" id="passToggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="rememberMe" name="rememberMe">
+            <span class="checkbox-custom" aria-hidden="true"></span>
+            Remember me
+          </label>
+          <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full" style="justify-content:center;padding:14px;">
+          Sign In
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="register.html">Create one free</a>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initLoginForm, auth } from './js/auth.js';
+    import { applyTheme } from './js/profile.js';
+
+    // Remove loading screen immediately
+    const _ls = document.getElementById('loadingScreen');
+    if (_ls) { _ls.classList.add('fade-out'); setTimeout(() => _ls.remove(), 400); }
+
+    applyTheme();
+
+    // Redirect if already logged in
+    auth.requireGuest();
+
+    // Show registration success banner
+    if (new URLSearchParams(location.search).get('registered') === 'true') {
+      document.getElementById('regBanner')?.classList.remove('hidden');
+    }
+
+    // Init form
+    initLoginForm();
+
+    // Password toggle
+    document.getElementById('togglePassword')?.addEventListener('click', () => {
+      const passInput = document.getElementById('password');
+      const icon = document.getElementById('passToggleIcon');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+      } else {
+        passInput.type = 'password';
+        icon.className = 'fas fa-eye';
+      }
+    });
+
+    // Vinyl spinning on focus
+    const emailInput = document.getElementById('email');
+    const vinyl = document.getElementById('vinylRecord');
+    emailInput?.addEventListener('focus', () => vinyl?.classList.add('spinning'));
+    emailInput?.addEventListener('blur', () => vinyl?.classList.remove('spinning'));
+  </script>
+</body>
+</html>
