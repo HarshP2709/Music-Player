@@ -8,15 +8,15 @@ import { createClient } from '@supabase/supabase-js';
 // ─── Configuration ────────────────────────────────────────────────────────────
 // Vite injects VITE_* vars at build/dev time via import.meta.env.
 // The fallback literals ensure the app works when opened directly in a browser.
-const SUPABASE_URL      = import.meta.env?.VITE_SUPABASE_URL
-                       || 'https://yzatavzhwqxtbxxeqmjq.supabase.co';
+const SUPABASE_URL = import.meta.env?.VITE_SUPABASE_URL
+  || 'https://orobcfjiaasgtrsabbaw.supabase.co';
 const SUPABASE_ANON_KEY = import.meta.env?.VITE_SUPABASE_ANON_KEY
-                       || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6YXRhdnpod3F4dGJ4eGVxbWpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1Nzc3NjEsImV4cCI6MjA5OTE1Mzc2MX0.BC_1EoBAqt37W6VoXmE8xdXpdx7UR2tK23dfYLfoO3U';
+  || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yb2JjZmppYWFzZ3Ryc2FiYmF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NDI5NjcsImV4cCI6MjA5OTUxODk2N30.SbSPLngkWwvUzE3EOaa7cZ5FyDPf9nG25gwlWL31tvE';
 
 // ─── Storage Bucket Names ────────────────────────────────────────────────────
 export const BUCKETS = {
-  SONGS:   import.meta.env?.VITE_SUPABASE_STORAGE_BUCKET || 'songs',
-  COVERS:  'covers',
+  SONGS: import.meta.env?.VITE_SUPABASE_STORAGE_BUCKET || 'songs',
+  COVERS: 'covers',
   AVATARS: 'avatars',
   ARTISTS: 'artists',
 };
