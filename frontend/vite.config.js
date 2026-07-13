@@ -24,19 +24,20 @@ export default defineConfig({
   },
 
   build: {
+    target: 'esnext',
     outDir: 'dist',
     emptyOutDir: true,
 
     rollupOptions: {
       input: {
-        main:           'index.html',
-        login:          'login.html',
-        register:       'register.html',
+        main: 'index.html',
+        login: 'login.html',
+        register: 'register.html',
         forgotPassword: 'forgot-password.html',
-        dashboard:      'dashboard.html',
-        playlist:       'playlist.html',
-        favorites:      'favorites.html',
-        profile:        'profile.html',
+        dashboard: 'dashboard.html',
+        playlist: 'playlist.html',
+        favorites: 'favorites.html',
+        profile: 'profile.html',
       },
     },
   },
