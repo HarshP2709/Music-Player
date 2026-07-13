@@ -9,6 +9,9 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
 
 import songsRouter    from './routes/songs.js';
 import artistsRouter  from './routes/artists.js';
@@ -18,15 +21,26 @@ import profileRouter  from './routes/profile.js';
 import storageRouter  from './routes/storage.js';
 import authRouter     from './routes/auth.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// frontend folder is two levels up from src/ → backend/src/../../frontend
+const FRONTEND_DIR = path.resolve(__dirname, '../../frontend');
+const FRONTEND_DIST = path.join(FRONTEND_DIR, 'dist');
+
 const app  = express();
 const PORT = process.env.PORT || 5000;
 
 // ─── Security & Utility Middleware ───────────────────────────────────────────
-app.use(helmet());
+// In development, disable CSP so the frontend's inline scripts / CDN assets load.
+// In production, set a proper CSP instead.
+app.use(helmet({
+  contentSecurityPolicy: process.env.NODE_ENV === 'production'
+    ? undefined   // use helmet's default strict CSP in prod
+    : false,      // disabled in dev so browser can load CDN fonts, scripts, etc.
+}));
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
-  .split(',')
-  .map(o => o.trim());
+const allowedOrigins = (
+  process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5000'
+).split(',').map(o => o.trim());
 
 app.use(cors({
   origin: (origin, cb) => {
@@ -64,7 +78,32 @@ app.use('/api/playlists', playlistsRouter);
 app.use('/api/profile',   profileRouter);
 app.use('/api/storage',   storageRouter);
 
-// ─── 404 Handler ─────────────────────────────────────────────────────────────
+// ─── Serve Frontend Static Files ─────────────────────────────────────────────
+// Serve the built frontend (dist/) if it exists, or the raw frontend/ folder
+// in development so that opening localhost:5000 shows the app, not a 404.
+const staticDir = existsSync(FRONTEND_DIST) ? FRONTEND_DIST : FRONTEND_DIR;
+
+app.use(express.static(staticDir, {
+  // Don't serve .js, .ts source files from node_modules inside frontend
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  },
+}));
+
+// SPA fallback — for any non-API, non-static request serve index.html
+app.get(/^(?!\/api).*/, (_req, res) => {
+  const indexFile = path.join(staticDir, 'index.html');
+  if (existsSync(indexFile)) {
+    res.sendFile(indexFile);
+  } else {
+    // Dev: frontend not built yet — redirect to Vite dev server
+    res.redirect('http://localhost:3000');
+  }
+});
+
+// ─── 404 Handler (API routes only) ───────────────────────────────────────────
 app.use((_req, res) => {
   res.status(404).json({ error: 'Route not found.' });
 });
