@@ -243,21 +243,27 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_profiles_updated_at  ON public.profiles;
 CREATE TRIGGER trg_profiles_updated_at BEFORE UPDATE ON public.profiles
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
 
+DROP TRIGGER IF EXISTS trg_artists_updated_at   ON public.artists;
 CREATE TRIGGER trg_artists_updated_at BEFORE UPDATE ON public.artists
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
 
+DROP TRIGGER IF EXISTS trg_albums_updated_at    ON public.albums;
 CREATE TRIGGER trg_albums_updated_at BEFORE UPDATE ON public.albums
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
 
+DROP TRIGGER IF EXISTS trg_songs_updated_at     ON public.songs;
 CREATE TRIGGER trg_songs_updated_at BEFORE UPDATE ON public.songs
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
 
+DROP TRIGGER IF EXISTS trg_playlists_updated_at ON public.playlists;
 CREATE TRIGGER trg_playlists_updated_at BEFORE UPDATE ON public.playlists
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
 
+DROP TRIGGER IF EXISTS trg_settings_updated_at  ON public.settings;
 CREATE TRIGGER trg_settings_updated_at BEFORE UPDATE ON public.settings
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
 
@@ -280,6 +286,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+DROP TRIGGER IF EXISTS trg_on_auth_user_created ON auth.users;
 CREATE TRIGGER trg_on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
@@ -305,6 +312,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+DROP TRIGGER IF EXISTS trg_playlist_songs_stats    ON public.playlist_songs;
 CREATE TRIGGER trg_playlist_songs_stats
   AFTER INSERT OR DELETE ON public.playlist_songs
   FOR EACH ROW EXECUTE FUNCTION public.update_playlist_stats();
@@ -320,6 +328,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+DROP TRIGGER IF EXISTS trg_increment_play_count    ON public.recently_played;
 CREATE TRIGGER trg_increment_play_count
   AFTER INSERT ON public.recently_played
   FOR EACH ROW EXECUTE FUNCTION public.increment_song_play_count();
@@ -342,6 +351,10 @@ ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 -- ============================================================
 -- RLS POLICIES - Profiles
 -- ============================================================
+DROP POLICY IF EXISTS "Profiles: public read"  ON public.profiles;
+DROP POLICY IF EXISTS "Profiles: owner update" ON public.profiles;
+DROP POLICY IF EXISTS "Profiles: owner delete" ON public.profiles;
+DROP POLICY IF EXISTS "Profiles: auth insert"  ON public.profiles;
 CREATE POLICY "Profiles: public read" ON public.profiles FOR SELECT USING (true);
 CREATE POLICY "Profiles: owner update" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "Profiles: owner delete" ON public.profiles FOR DELETE USING (auth.uid() = id);
@@ -350,13 +363,20 @@ CREATE POLICY "Profiles: auth insert" ON public.profiles FOR INSERT WITH CHECK (
 -- ============================================================
 -- RLS POLICIES - Artists & Albums & Songs (public read)
 -- ============================================================
+DROP POLICY IF EXISTS "Artists: public read" ON public.artists;
+DROP POLICY IF EXISTS "Albums: public read"  ON public.albums;
+DROP POLICY IF EXISTS "Songs: public read"   ON public.songs;
 CREATE POLICY "Artists: public read" ON public.artists FOR SELECT USING (true);
-CREATE POLICY "Albums: public read" ON public.albums FOR SELECT USING (true);
-CREATE POLICY "Songs: public read" ON public.songs FOR SELECT USING (is_active = true);
+CREATE POLICY "Albums: public read"  ON public.albums  FOR SELECT USING (true);
+CREATE POLICY "Songs: public read"   ON public.songs   FOR SELECT USING (is_active = true);
 
 -- ============================================================
 -- RLS POLICIES - Playlists
 -- ============================================================
+DROP POLICY IF EXISTS "Playlists: read own or public" ON public.playlists;
+DROP POLICY IF EXISTS "Playlists: owner insert"       ON public.playlists;
+DROP POLICY IF EXISTS "Playlists: owner update"       ON public.playlists;
+DROP POLICY IF EXISTS "Playlists: owner delete"       ON public.playlists;
 CREATE POLICY "Playlists: read own or public" ON public.playlists FOR SELECT
   USING (user_id = auth.uid() OR is_public = true);
 CREATE POLICY "Playlists: owner insert" ON public.playlists FOR INSERT
@@ -369,6 +389,9 @@ CREATE POLICY "Playlists: owner delete" ON public.playlists FOR DELETE
 -- ============================================================
 -- RLS POLICIES - Playlist Songs
 -- ============================================================
+DROP POLICY IF EXISTS "Playlist songs: read if playlist visible" ON public.playlist_songs;
+DROP POLICY IF EXISTS "Playlist songs: owner insert"             ON public.playlist_songs;
+DROP POLICY IF EXISTS "Playlist songs: owner delete"             ON public.playlist_songs;
 CREATE POLICY "Playlist songs: read if playlist visible" ON public.playlist_songs FOR SELECT
   USING (EXISTS (
     SELECT 1 FROM public.playlists p
@@ -386,22 +409,27 @@ CREATE POLICY "Playlist songs: owner delete" ON public.playlist_songs FOR DELETE
 -- ============================================================
 -- RLS POLICIES - Favorites
 -- ============================================================
+DROP POLICY IF EXISTS "Favorites: owner only" ON public.favorites;
 CREATE POLICY "Favorites: owner only" ON public.favorites FOR ALL USING (auth.uid() = user_id);
 
 -- ============================================================
 -- RLS POLICIES - Recently Played & Listening History
 -- ============================================================
-CREATE POLICY "Recently played: owner only" ON public.recently_played FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Recently played: owner only"    ON public.recently_played;
+DROP POLICY IF EXISTS "Listening history: owner only"  ON public.listening_history;
+CREATE POLICY "Recently played: owner only"   ON public.recently_played   FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Listening history: owner only" ON public.listening_history FOR ALL USING (auth.uid() = user_id);
 
 -- ============================================================
 -- RLS POLICIES - Settings
 -- ============================================================
+DROP POLICY IF EXISTS "Settings: owner only" ON public.settings;
 CREATE POLICY "Settings: owner only" ON public.settings FOR ALL USING (auth.uid() = user_id);
 
 -- ============================================================
 -- RLS POLICIES - Notifications
 -- ============================================================
+DROP POLICY IF EXISTS "Notifications: owner only" ON public.notifications;
 CREATE POLICY "Notifications: owner only" ON public.notifications FOR ALL USING (auth.uid() = user_id);
 
 -- ============================================================
