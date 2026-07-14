@@ -374,6 +374,34 @@ export function initModals() {
       if (open) closeModal(open.id);
     }
   });
+
+  // Wire Playlist Creation Form globally
+  const createForm = document.getElementById('createPlaylistForm');
+  if (createForm) {
+    createForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('playlistName').value,
+        description: document.getElementById('playlistDesc').value,
+        is_public: document.getElementById('playlistPublic').checked
+      };
+
+      const { data, error } = await createPlaylist(payload);
+      if (!error && data) {
+        closeModal('createPlaylistModal');
+        createForm.reset();
+        // If we are on playlist.html, reload data
+        if (window.location.pathname.includes('playlist.html')) {
+          const { initPlaylist } = await import('./pages/playlist.js');
+          initPlaylist();
+        } else {
+          // Otherwise, silently update sidebar maybe
+          const { initDashboard } = await import('./pages/dashboard.js');
+          if (window.location.pathname.includes('dashboard.html')) initDashboard();
+        }
+      }
+    });
+  }
 }
 
 // ─── Navigation Helpers ───────────────────────────────────────────────────────
