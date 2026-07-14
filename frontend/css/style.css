@@ -1235,3 +1235,11 @@ mark {
 .form-input.error {
   border-color: var(--red-accent);
 }
+
+/* --- Profile specifics --- */
+body.in-profile .topbar { display: none; }
+@media (max-width: 1024px) {
+  body.in-profile .topbar { display: flex; }
+  body.in-profile .topbar__right { display: none; }
+  body.in-profile .nav-hist-btn { display: none; }
+}

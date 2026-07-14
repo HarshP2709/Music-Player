@@ -62,6 +62,14 @@ async function navigate(url, isPopState = false) {
 
 export function initCurrentPage() {
     const path = window.location.pathname;
+
+    // Toggle body class for profile-specific layout adjustments (e.g. hiding topbar)
+    if (path.includes('profile.html')) {
+        document.body.classList.add('in-profile');
+    } else {
+        document.body.classList.remove('in-profile');
+    }
+
     if (path.includes('dashboard.html')) initDashboard();
     else if (path.includes('favorites.html')) initFavorites();
     else if (path.includes('playlist.html')) initPlaylist();
