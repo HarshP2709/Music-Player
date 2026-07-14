@@ -23,7 +23,7 @@ export async function getUserPlaylists() {
       *,
       playlist_songs (
         id,
-        songs ( id, title, duration, cover_url, artists ( name ) )
+        songs ( id, title, duration, cover_url, audio_url, artists ( name ) )
       )
     `)
     .eq('user_id', user.id)
