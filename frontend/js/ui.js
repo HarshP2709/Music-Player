@@ -401,6 +401,28 @@ export function initSidebar() {
     const href = link.getAttribute('href')?.split('/').pop();
     link.classList.toggle('active', href === currentPath);
   });
+
+  // Global Create Playlist Button Handler
+  const createPlBtn = document.getElementById('createPlaylistBtn');
+  if (createPlBtn) {
+    createPlBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const modal = document.getElementById('createPlaylistModal');
+      // If modal exists heavily on the current page, open it.
+      if (modal) {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      } else {
+        // Fallback navigate to playlist.html where modal is always accessible
+        const a = document.createElement('a');
+        a.href = 'playlist.html?action=create';
+        a.classList.add('nav-link');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+    });
+  }
 }
 
 // ─── Intersection Observer (Lazy Load + Animations) ──────────────────────────

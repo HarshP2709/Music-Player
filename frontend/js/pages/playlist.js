@@ -22,6 +22,16 @@ export async function initPlaylist() {
     } else {
         // We are viewing the "My Playlists" grid
         await loadAllPlaylists();
+
+        if (urlParams.get('action') === 'create') {
+            document.getElementById('createPlaylistModal')?.classList.add('open');
+            document.body.style.overflow = 'hidden';
+
+            // Clean up the URL
+            const url = new URL(window.location);
+            url.searchParams.delete('action');
+            window.history.replaceState({}, '', url);
+        }
     }
 }
 
@@ -47,10 +57,10 @@ async function loadAllPlaylists() {
     const sidebarPls = document.getElementById('sidebarPlaylists');
     if (sidebarPls) {
         sidebarPls.innerHTML = allPlaylists.slice(0, 6).map(pl => `
-      <div class="sidebar-playlist-item" onclick="window.location='playlist.html?id=${pl.id}'">
+      <a href="playlist.html?id=${pl.id}" class="sidebar-playlist-item" style="text-decoration:none; color:inherit; display:flex; align-items:center;">
         <img src="${pl.cover_url || 'https://picsum.photos/seed/' + pl.id + '/60/60'}" alt="">
         <span>${pl.name}</span>
-      </div>
+      </a>
     `).join('');
     }
 }

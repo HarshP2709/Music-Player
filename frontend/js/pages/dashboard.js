@@ -67,10 +67,10 @@ export async function initDashboard() {
     const sidebarPls = document.getElementById('sidebarPlaylists');
     if (sidebarPls) {
         sidebarPls.innerHTML = playlists.slice(0, 6).map(pl => `
-      <div class="sidebar-playlist-item" onclick="window.location='playlist.html?id=${pl.id}'">
+      <a href="playlist.html?id=${pl.id}" class="sidebar-playlist-item" style="text-decoration:none; color:inherit; display:flex; align-items:center;">
         <img src="${pl.cover_url || 'https://picsum.photos/seed/' + pl.id + '/60/60'}" alt="">
         <span>${pl.name}</span>
-      </div>
+      </a>
     `).join('');
     }
 
