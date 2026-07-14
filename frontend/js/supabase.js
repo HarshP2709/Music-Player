@@ -3,7 +3,7 @@
  * Reads credentials from Vite environment variables (VITE_* prefix)
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 // Vite injects VITE_* vars at build/dev time via import.meta.env.
