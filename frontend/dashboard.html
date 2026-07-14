@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — Harmony Music Player</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
@@ -14,6 +17,7 @@
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
+
 <body>
 
   <div id="loadingScreen">
@@ -99,14 +103,8 @@
           <!-- Search -->
           <div class="search-container" role="search">
             <i class="fas fa-search search-icon" aria-hidden="true"></i>
-            <input
-              type="search"
-              class="search-input"
-              id="searchInput"
-              placeholder="Search songs, artists, albums..."
-              aria-label="Search music"
-              autocomplete="off"
-            >
+            <input type="search" class="search-input" id="searchInput" placeholder="Search songs, artists, albums..."
+              aria-label="Search music" autocomplete="off">
             <div id="searchOverlay" role="listbox" aria-label="Search results">
               <div id="searchResults"></div>
             </div>
@@ -122,7 +120,8 @@
 
           <a href="profile.html" class="btn-icon" aria-label="Profile settings">
             <img id="topbarAvatar" src="assets/images/default-avatar.jpg"
-              style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--border);" alt="Profile">
+              style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--border);"
+              alt="Profile">
           </a>
         </div>
       </header>
@@ -133,7 +132,8 @@
         <!-- Welcome Card -->
         <div class="welcome-card fade-in" id="welcomeCard">
           <div class="welcome-card__content">
-            <h1 class="welcome-card__greeting">Good <span id="timeGreeting">morning</span>, <span id="welcomeName">there</span> 👋</h1>
+            <h1 class="welcome-card__greeting">Good <span id="timeGreeting">morning</span>, <span
+                id="welcomeName">there</span> 👋</h1>
             <p class="welcome-card__sub">What are you in the mood for today?</p>
             <div class="welcome-card__actions">
               <button class="btn btn-primary" id="playFeaturedBtn">
@@ -233,7 +233,8 @@
       <!-- Left: Song Info -->
       <div class="player-left">
         <div class="player-cover-wrap">
-          <img id="playerCover" src="assets/images/default-cover.jpg" class="player-cover" alt="Album cover" loading="lazy">
+          <img id="playerCover" src="assets/images/default-cover.jpg" class="player-cover" alt="Album cover"
+            loading="lazy">
         </div>
         <div class="player-info">
           <div class="player-title" id="playerSongTitle">No song playing</div>
@@ -306,7 +307,8 @@
     <aside id="queuePanel" aria-label="Queue">
       <div class="queue-header">
         <h3>Queue</h3>
-        <button class="btn-icon" onclick="document.getElementById('queuePanel').classList.remove('open')" aria-label="Close queue">
+        <button class="btn-icon" onclick="document.getElementById('queuePanel').classList.remove('open')"
+          aria-label="Close queue">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -321,19 +323,22 @@
     <div class="modal__panel">
       <div class="modal__header">
         <h2 class="modal__title" id="modalTitle">Create Playlist</h2>
-        <button class="modal__close" data-modal-close="createPlaylistModal" aria-label="Close"><i class="fas fa-times"></i></button>
+        <button class="modal__close" data-modal-close="createPlaylistModal" aria-label="Close"><i
+            class="fas fa-times"></i></button>
       </div>
       <form id="createPlaylistForm">
         <div class="form-group">
           <label class="form-label">Playlist Name</label>
           <div class="form-input-icon">
             <i class="fas fa-list input-icon"></i>
-            <input type="text" id="playlistName" class="form-input" placeholder="My Awesome Playlist" required autofocus>
+            <input type="text" id="playlistName" class="form-input" placeholder="My Awesome Playlist" required
+              autofocus>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Description <span style="color:var(--text-muted)">(optional)</span></label>
-          <textarea id="playlistDesc" class="form-input" rows="3" placeholder="What's this playlist about?" style="resize:vertical;padding-top:12px;"></textarea>
+          <textarea id="playlistDesc" class="form-input" rows="3" placeholder="What's this playlist about?"
+            style="resize:vertical;padding-top:12px;"></textarea>
         </div>
         <div class="form-group flex-between">
           <label class="form-label">Make Public</label>
@@ -358,7 +363,8 @@
     <div class="modal__panel">
       <div class="modal__header">
         <h2 class="modal__title" id="addModalTitle">Add to Playlist</h2>
-        <button class="modal__close" data-modal-close="addToPlaylistModal" aria-label="Close"><i class="fas fa-times"></i></button>
+        <button class="modal__close" data-modal-close="addToPlaylistModal" aria-label="Close"><i
+            class="fas fa-times"></i></button>
       </div>
       <div id="addPlaylistList" style="max-height:320px;overflow-y:auto;"></div>
     </div>
@@ -373,7 +379,7 @@
     import { loadFavoriteIds } from './js/favorites.js';
     import { getUserPlaylists, createPlaylist, renderPlaylistGrid, addSongToPlaylist } from './js/playlist.js';
     import { getUserStats } from './js/profile.js';
-    import { formatDuration, formatNumber, timeAgo } from './js/utils.js';
+    import { formatDuration, formatNumber, timeAgo, getAvatarUrl } from './js/utils.js';
     import notify from './js/notifications.js';
     import { applyTheme } from './js/profile.js';
 
@@ -403,10 +409,10 @@
       document.getElementById('timeGreeting').textContent = greeting;
       document.getElementById('welcomeName').textContent = profile.full_name?.split(' ')[0] || profile.username;
       document.getElementById('sidebarName').textContent = profile.full_name || profile.username;
-      if (profile.avatar_url) {
-        document.getElementById('sidebarAvatar').src = profile.avatar_url;
-        document.getElementById('topbarAvatar').src = profile.avatar_url;
-      }
+
+      const avatarSrc = getAvatarUrl(profile);
+      document.getElementById('sidebarAvatar').src = avatarSrc;
+      document.getElementById('topbarAvatar').src = avatarSrc;
     }
 
     // ── Load Stats ────────────────────────────────────────────────
@@ -463,7 +469,7 @@
     const sidebarPls = document.getElementById('sidebarPlaylists');
     sidebarPls.innerHTML = playlists.slice(0, 6).map(pl => `
       <div class="sidebar-playlist-item" onclick="window.location='playlist.html?id=${pl.id}'">
-        <img src="${pl.cover_url || 'https://picsum.photos/seed/'+pl.id+'/60/60'}" alt="${pl.name}">
+        <img src="${pl.cover_url || 'https://picsum.photos/seed/' + pl.id + '/60/60'}" alt="${pl.name}">
         <span>${pl.name}</span>
       </div>
     `).join('');
@@ -479,7 +485,7 @@
     albumGrid.innerHTML = (albums || []).map(album => `
       <div class="song-card hover-lift">
         <div class="song-card__cover">
-          <img src="${album.cover_url || 'https://picsum.photos/seed/'+album.id+'/300/300'}" alt="${album.title}" loading="lazy">
+          <img src="${album.cover_url || 'https://picsum.photos/seed/' + album.id + '/300/300'}" alt="${album.title}" loading="lazy">
           <div class="song-card__overlay">
             <button class="btn-play-card" aria-label="Play ${album.title}"><i class="fas fa-play"></i></button>
           </div>
@@ -520,7 +526,7 @@
 
     // ── Shuffle All ───────────────────────────────────────────────
     document.getElementById('shuffleAllBtn')?.addEventListener('click', async () => {
-      const { data: allSongs } = await supabase.from('songs').select('id,title,cover_url,audio_url,duration,artists(name)').eq('is_active',true).limit(50);
+      const { data: allSongs } = await supabase.from('songs').select('id,title,cover_url,audio_url,duration,artists(name)').eq('is_active', true).limit(50);
       if (allSongs?.length) setQueue(allSongs, 0);
     });
 
@@ -536,4 +542,5 @@
     initIntersectionObserver();
   </script>
 </body>
+
 </html>

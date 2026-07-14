@@ -152,6 +152,15 @@ export function sanitizeHTML(str) {
 }
 
 /**
+ * Extract profile name for avatar, generate UI Avatar URL if missing
+ */
+export function getAvatarUrl(profile) {
+  if (profile?.avatar_url) return profile.avatar_url;
+  const name = profile?.full_name || profile?.username || 'User';
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=7c5cd8&color=fff&size=150`;
+}
+
+/**
  * Truncate text to max length with ellipsis
  * @param {string} text
  * @param {number} max
@@ -196,7 +205,7 @@ export const storage = {
     } catch { return fallback; }
   },
   set(key, value) {
-    try { localStorage.setItem(`harmony_${key}`, JSON.stringify(value)); } catch {}
+    try { localStorage.setItem(`harmony_${key}`, JSON.stringify(value)); } catch { }
   },
   remove(key) {
     localStorage.removeItem(`harmony_${key}`);

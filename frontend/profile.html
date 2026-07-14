@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile — Harmony Music Player</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
@@ -15,6 +18,7 @@
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
+
 <body>
 
   <div id="loadingScreen">
@@ -37,7 +41,10 @@
       <div class="sidebar__footer">
         <div class="sidebar__user active" role="button" tabindex="0">
           <img id="sidebarAvatar" src="assets/images/default-avatar.jpg" class="sidebar__user-avatar" alt="Profile">
-          <div><div class="sidebar__user-name" id="sidebarName">—</div><div class="sidebar__user-plan">Free Plan</div></div>
+          <div>
+            <div class="sidebar__user-name" id="sidebarName">—</div>
+            <div class="sidebar__user-plan">Free Plan</div>
+          </div>
         </div>
       </div>
     </aside>
@@ -69,7 +76,8 @@
           <div>
             <div class="profile-card">
               <div class="profile-avatar-wrap">
-                <img id="profileAvatar" src="assets/images/default-avatar.jpg" class="profile-avatar" alt="Profile picture">
+                <img id="profileAvatar" src="assets/images/default-avatar.jpg" class="profile-avatar"
+                  alt="Profile picture">
                 <button class="avatar-edit-btn" id="avatarEditBtn" aria-label="Change profile picture">
                   <i class="fas fa-camera"></i>
                 </button>
@@ -95,11 +103,15 @@
               </div>
 
               <nav class="profile-card__nav" aria-label="Profile sections">
-                <button class="profile-nav-item active" data-panel="general"><i class="fas fa-user"></i> General Info</button>
+                <button class="profile-nav-item active" data-panel="general"><i class="fas fa-user"></i> General
+                  Info</button>
                 <button class="profile-nav-item" data-panel="security"><i class="fas fa-lock"></i> Security</button>
-                <button class="profile-nav-item" data-panel="preferences"><i class="fas fa-sliders-h"></i> Preferences</button>
-                <button class="profile-nav-item" data-panel="notifications"><i class="fas fa-bell"></i> Notifications</button>
-                <button class="profile-nav-item danger" data-panel="danger"><i class="fas fa-exclamation-triangle"></i> Danger Zone</button>
+                <button class="profile-nav-item" data-panel="preferences"><i class="fas fa-sliders-h"></i>
+                  Preferences</button>
+                <button class="profile-nav-item" data-panel="notifications"><i class="fas fa-bell"></i>
+                  Notifications</button>
+                <button class="profile-nav-item danger" data-panel="danger"><i class="fas fa-exclamation-triangle"></i>
+                  Danger Zone</button>
               </nav>
             </div>
           </div>
@@ -137,7 +149,8 @@
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="bio">Bio</label>
-                    <textarea id="bio" class="form-input" rows="3" placeholder="Tell the world about yourself..." style="resize:vertical;padding-top:12px;"></textarea>
+                    <textarea id="bio" class="form-input" rows="3" placeholder="Tell the world about yourself..."
+                      style="resize:vertical;padding-top:12px;"></textarea>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="country">Country</label>
@@ -295,7 +308,8 @@
               <div class="panel-body">
                 <div class="danger-zone">
                   <h4><i class="fas fa-exclamation-triangle"></i> Delete Account</h4>
-                  <p>Once you delete your account, all data including playlists, favorites, and listening history will be permanently erased. This action cannot be undone.</p>
+                  <p>Once you delete your account, all data including playlists, favorites, and listening history will
+                    be permanently erased. This action cannot be undone.</p>
                   <button class="btn btn-danger" id="deleteAccountBtn">
                     <i class="fas fa-trash-alt"></i> Delete My Account
                   </button>
@@ -345,8 +359,10 @@
       </div>
     </div>
     <aside id="queuePanel" aria-label="Queue">
-      <div class="queue-header"><h3>Queue</h3>
-        <button class="btn-icon" onclick="document.getElementById('queuePanel').classList.remove('open')"><i class="fas fa-times"></i></button>
+      <div class="queue-header">
+        <h3>Queue</h3>
+        <button class="btn-icon" onclick="document.getElementById('queuePanel').classList.remove('open')"><i
+            class="fas fa-times"></i></button>
       </div>
       <div id="queueList"></div>
     </aside>
@@ -358,6 +374,7 @@
     import { initBottomPlayer, initSidebar, initThemeToggle } from './js/ui.js';
     import { initProfileForm, uploadAvatar, getUserStats, updateSettings, getSettings, setTheme, applyTheme, deleteAccount } from './js/profile.js';
     import notify from './js/notifications.js';
+    import { getAvatarUrl } from './js/utils.js';
 
     // Remove loading screen immediately
     const _ls = document.getElementById('loadingScreen');
@@ -376,10 +393,9 @@
       document.getElementById('profileUsername').textContent = `@${profile.username}`;
       document.getElementById('profileEmail').innerHTML = `<i class="fas fa-envelope"></i> ${profile.email}`;
       document.getElementById('sidebarName').textContent = profile.full_name || profile.username;
-      if (profile.avatar_url) {
-        document.getElementById('profileAvatar').src = profile.avatar_url;
-        document.getElementById('sidebarAvatar').src = profile.avatar_url;
-      }
+      const avatarSrc = getAvatarUrl(profile);
+      document.getElementById('profileAvatar').src = avatarSrc;
+      document.getElementById('sidebarAvatar').src = avatarSrc;
 
       // Fill form
       document.getElementById('fullName').value = profile.full_name || '';
@@ -474,4 +490,5 @@
     initThemeToggle();
   </script>
 </body>
+
 </html>

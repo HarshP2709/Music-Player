@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Playlists — Harmony Music Player</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
@@ -15,6 +18,7 @@
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
+
 <body>
 
   <div id="loadingScreen">
@@ -40,7 +44,10 @@
       <div class="sidebar__footer">
         <div class="sidebar__user" onclick="window.location='profile.html'" role="button" tabindex="0">
           <img id="sidebarAvatar" src="assets/images/default-avatar.jpg" class="sidebar__user-avatar" alt="Profile">
-          <div><div class="sidebar__user-name" id="sidebarName">—</div><div class="sidebar__user-plan">Free Plan</div></div>
+          <div>
+            <div class="sidebar__user-name" id="sidebarName">—</div>
+            <div class="sidebar__user-plan">Free Plan</div>
+          </div>
         </div>
       </div>
     </aside>
@@ -56,12 +63,16 @@
         <div class="topbar__right">
           <div class="search-container" role="search">
             <i class="fas fa-search search-icon"></i>
-            <input type="search" class="search-input" id="searchInput" placeholder="Search playlists..." aria-label="Search">
-            <div id="searchOverlay"><div id="searchResults"></div></div>
+            <input type="search" class="search-input" id="searchInput" placeholder="Search playlists..."
+              aria-label="Search">
+            <div id="searchOverlay">
+              <div id="searchResults"></div>
+            </div>
           </div>
           <button id="themeToggle" class="btn-icon"><i class="fas fa-sun"></i></button>
           <a href="profile.html" class="btn-icon">
-            <img id="topbarAvatar" src="assets/images/default-avatar.jpg" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--border);" alt="Profile">
+            <img id="topbarAvatar" src="assets/images/default-avatar.jpg"
+              style="width:32px;height:32px;border-radius:50%;border:2px solid var(--border);" alt="Profile">
           </a>
         </div>
       </header>
@@ -122,7 +133,8 @@
         <div class="player-controls">
           <button class="player-btn" id="btnShuffle" title="Shuffle"><i class="fas fa-random"></i></button>
           <button class="player-btn" id="btnPrev" title="Previous"><i class="fas fa-step-backward"></i></button>
-          <button class="player-btn player-btn--play" id="btnPlayPause" title="Play/Pause"><i class="fas fa-play"></i></button>
+          <button class="player-btn player-btn--play" id="btnPlayPause" title="Play/Pause"><i
+              class="fas fa-play"></i></button>
           <button class="player-btn" id="btnNext" title="Next"><i class="fas fa-step-forward"></i></button>
           <button class="player-btn" id="btnRepeat" title="Repeat"><i class="fas fa-redo"></i></button>
         </div>
@@ -142,8 +154,10 @@
     </div>
 
     <aside id="queuePanel" aria-label="Queue">
-      <div class="queue-header"><h3>Queue</h3>
-        <button class="btn-icon" onclick="document.getElementById('queuePanel').classList.remove('open')"><i class="fas fa-times"></i></button>
+      <div class="queue-header">
+        <h3>Queue</h3>
+        <button class="btn-icon" onclick="document.getElementById('queuePanel').classList.remove('open')"><i
+            class="fas fa-times"></i></button>
       </div>
       <div id="queueList"></div>
     </aside>
@@ -164,15 +178,18 @@
         </div>
         <div class="form-group">
           <label class="form-label">Description</label>
-          <textarea id="playlistDesc" class="form-input" rows="2" placeholder="Optional description" style="resize:vertical;"></textarea>
+          <textarea id="playlistDesc" class="form-input" rows="2" placeholder="Optional description"
+            style="resize:vertical;"></textarea>
         </div>
         <div class="form-group flex-between">
           <label class="form-label" for="playlistPublic">Make Public</label>
-          <label class="toggle-switch"><input type="checkbox" id="playlistPublic"><span class="toggle-track"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="playlistPublic"><span
+              class="toggle-track"></span></label>
         </div>
         <div style="display:flex;gap:12px;">
           <button type="button" class="btn btn-secondary" data-modal-close="createPlaylistModal">Cancel</button>
-          <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;"><i class="fas fa-plus"></i> Create</button>
+          <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;"><i
+              class="fas fa-plus"></i> Create</button>
         </div>
       </form>
     </div>
@@ -198,7 +215,8 @@
         </div>
         <div class="form-group flex-between">
           <label class="form-label">Public</label>
-          <label class="toggle-switch"><input type="checkbox" id="editPlaylistPublic"><span class="toggle-track"></span></label>
+          <label class="toggle-switch"><input type="checkbox" id="editPlaylistPublic"><span
+              class="toggle-track"></span></label>
         </div>
         <div style="display:flex;gap:12px;">
           <button type="button" class="btn btn-secondary" data-modal-close="editPlaylistModal">Cancel</button>
@@ -216,7 +234,7 @@
     import { getUserPlaylists, getPlaylist, createPlaylist, updatePlaylist, deletePlaylist, renderPlaylistGrid, removeSongFromPlaylist, initDragDrop } from './js/playlist.js';
     import { loadFavoriteIds } from './js/favorites.js';
     import { initSearch } from './js/search.js';
-    import { sanitizeHTML, formatTime, formatDuration } from './js/utils.js';
+    import { sanitizeHTML, formatTime, formatDuration, getAvatarUrl } from './js/utils.js';
     import notify from './js/notifications.js';
     import { applyTheme } from './js/profile.js';
 
@@ -241,10 +259,9 @@
     const profile = await auth.getProfile();
     if (profile) {
       document.getElementById('sidebarName').textContent = profile.full_name || profile.username;
-      if (profile.avatar_url) {
-        document.getElementById('sidebarAvatar').src = profile.avatar_url;
-        document.getElementById('topbarAvatar').src = profile.avatar_url;
-      }
+      const avatarSrc = getAvatarUrl(profile);
+      document.getElementById('sidebarAvatar').src = avatarSrc;
+      document.getElementById('topbarAvatar').src = avatarSrc;
     }
 
     // ── Load Playlists ────────────────────────────────────────────
@@ -264,7 +281,7 @@
       document.getElementById('sidebarPlaylists').innerHTML =
         allPlaylists.slice(0, 6).map(pl => `
           <div class="sidebar-playlist-item" onclick="window.location='playlist.html?id=${pl.id}'">
-            <img src="${pl.cover_url || 'https://picsum.photos/seed/'+pl.id+'/60/60'}" alt="${pl.name}">
+            <img src="${pl.cover_url || 'https://picsum.photos/seed/' + pl.id + '/60/60'}" alt="${pl.name}">
             <span>${pl.name}</span>
           </div>
         `).join('');
@@ -312,7 +329,7 @@
       const songs = pl.playlist_songs?.map(ps => ps.songs).filter(Boolean) || [];
 
       document.getElementById('playlistHero').innerHTML = `
-        <img class="playlist-hero__cover" src="${pl.cover_url || 'https://picsum.photos/seed/'+pl.id+'/300/300'}" alt="${sanitizeHTML(pl.name)}">
+        <img class="playlist-hero__cover" src="${pl.cover_url || 'https://picsum.photos/seed/' + pl.id + '/300/300'}" alt="${sanitizeHTML(pl.name)}">
         <div class="playlist-hero__info">
           <div class="playlist-hero__type">Playlist</div>
           <h1 class="playlist-hero__title">${sanitizeHTML(pl.name)}</h1>
@@ -447,4 +464,5 @@
     }
   </script>
 </body>
+
 </html>
