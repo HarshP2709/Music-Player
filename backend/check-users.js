@@ -1,6 +1,5 @@
+import 'dotenv/config.js';
 import { adminSupabase } from './src/config/supabase.js';
-import dotenv from 'dotenv';
-dotenv.config();
 
 async function run() {
     console.log('Retrieving users from Auth...');

@@ -44,9 +44,9 @@ export const auth = {
     });
 
     if (error) {
-      const code   = error.code   || '';
-      const msg    = error.message || '';
-      const status = error.status  || 0;
+      const code = error.code || '';
+      const msg = error.message || '';
+      const status = error.status || 0;
       if (status === 429 || code === 'over_email_send_rate_limit' || msg.toLowerCase().includes('rate limit') || msg.toLowerCase().includes('after'))
         return { error: 'Too many signup attempts. Please wait 60 seconds before trying again.' };
       if (code === 'user_already_exists' || msg.toLowerCase().includes('already registered'))
@@ -55,11 +55,7 @@ export const auth = {
         return { error: 'Password is too weak. Use at least 8 characters with letters and numbers.' };
       return { error: msg || 'Signup failed. Please try again.' };
     }
-    // If identities array is empty the email is already registered (pending confirmation)
-    if (data?.user && data.user.identities && data.user.identities.length === 0) {
-      return { error: 'This email is already registered. Check your inbox for the confirmation link, or try signing in.' };
-    }
-    return { data, needsVerification: !data.session };
+    return { data };
   },
 
   // ── Login ──────────────────────────────────────────────────────────────────
@@ -73,13 +69,11 @@ export const auth = {
     });
 
     if (error) {
-      const code   = error.code   || '';
-      const msg    = error.message || '';
-      const status = error.status  || 0;
+      const code = error.code || '';
+      const msg = error.message || '';
+      const status = error.status || 0;
       if (code === 'invalid_credentials' || msg.includes('Invalid login') || msg.includes('invalid_grant') || msg.includes('Invalid email or password'))
         return { error: 'Invalid email or password.' };
-      if (code === 'email_not_confirmed' || msg.includes('Email not confirmed') || msg.includes('email_not_confirmed'))
-        return { error: 'Please verify your email first — check your inbox for the confirmation link.' };
       if (code === 'user_not_found' || msg.includes('User not found'))
         return { error: 'No account found with this email.' };
       if (status === 429 || code === 'over_email_send_rate_limit' || msg.includes('rate limit'))
@@ -280,12 +274,10 @@ export function initRegisterForm() {
 
     setLoading(btn, false, 'Create Free Account');
 
-    if (needsVerification) {
-      redirect(`login.html?registered=true`);
-    } else {
-      notify.success('Account created!', 'Welcome to Harmony!');
-      redirect('dashboard.html');
-    }
+    notify.success('Account created!', 'Welcome to Harmony!');
+
+    // Automatically redirect to dashboard (requires Supabase 'Confirm Email' to be OFF)
+    redirect('dashboard.html');
   });
 
   // Live password strength indicator
