@@ -8,12 +8,22 @@ import {
     deleteAccount
 } from '../profile.js';
 import notify from '../notifications.js';
+import { getAvatarUrl } from '../utils.js';
 
 export async function initProfile() {
+    const el = (id) => document.getElementById(id);
     const profile = await auth.getProfile();
+    const user = await auth.getUser();
     if (profile) {
+        // Fill Profile Card Visuals
+        if (el('profileName')) el('profileName').textContent = profile.full_name || profile.username || 'Music Fan';
+        if (el('profileUsername')) el('profileUsername').textContent = `@${profile.username || 'user'}`;
+        if (el('profileEmail') && user) el('profileEmail').innerHTML = `<i class="fas fa-envelope"></i> ${user.email}`;
+
+        const avatarSrc = getAvatarUrl(profile);
+        if (el('profileAvatar')) el('profileAvatar').src = avatarSrc;
+
         // Fill form
-        const el = (id) => document.getElementById(id);
         if (el('fullName')) el('fullName').value = profile.full_name || '';
         if (el('username')) el('username').value = profile.username || '';
         if (el('phone')) el('phone').value = profile.phone || '';
@@ -27,7 +37,6 @@ export async function initProfile() {
     // Load stats
     const stats = await getUserStats();
     if (stats) {
-        const el = (id) => document.getElementById(id);
         if (el('pStatSongs')) el('pStatSongs').textContent = stats.songsPlayed;
         if (el('pStatLiked')) el('pStatLiked').textContent = stats.favoritesCount;
         if (el('pStatLists')) el('pStatLists').textContent = stats.playlistCount;
